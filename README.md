@@ -14,14 +14,13 @@ Current Features:
   - (Acuator 911 Button) Button to emergency stop the acuator. 
   - (Chicken Shit WWW) web interface to exicute functions and pull sensor data for mobile. 
 
+
+Required Libraries:
+- Adafruit_DHT_Particle.h
+
+Particle Physical Configuration:
+
 10/15/2020 - bug fixes
   - Enabled push and hold feature to close door. 
   - clean up code. 
   - Added this section for tracking. 
-
-
-Particle Physical Configuration:
-
-
-Required Libraries:
-- Adafruit_DHT_Particle.h
