@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>RecklessR - Chicken Controls</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><meta name="googlebot" content="noindex">
+	<style type="text/css">* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the header */
+header {
+  background-color: #D3D3D3;
+  padding: 30px;
+  text-align: center;
+  font-size: 35px;
+  color: white;
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+  float: left;
+  width: 30%;
+  /* height: 300px; /* only for demonstration, should be removed */
+  background: #778899;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+article {
+  float: left;
+  padding: 20px;
+  width: 70%;
+  background-color: #808080;
+  height: 300px; /* only for demonstration, should be removed */
+}
+
+/* Clear floats after the columns */
+section:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: #808080;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+	</style>
+	<!-- Bootstrap CSS -->
+	<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" rel="stylesheet" /><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8">
+    </script><script type="text/javascript">
+        var deviceID    = "ADD_YOUR_DEVICE_ID_HERE";
+        var accessToken = "ADD_YOUR_ACCESS_TOKEN_HERE";
+    </script>
+</head>
+<body>
+<h2 align=center>RecklessR Chicken Automation</h2>
+
+<header><h2 align=center><img src="chickenshitlogo.png" /></h2></header>
+<section>
+<nav>
+<ul>
+	<li>
+	    <p align=center>Chicken Coop Door</p>
+	    <center>
+	    <div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" id="openDoor" onclick="openDoor()" class="btn btn-secondary">UP</button>
+  <button type="button" id="eDoor" onclick="eDoor()" class="btn btn-secondary">Emergency Stop</button>
+    <button type="button" id="closeDoor" onclick="closeDoor()" class="btn btn-secondary">Down</button>
+    </li>
+    <br/>
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+ <li>
+    	    <p align=center>Heat Power</p>
+	    <center>
+	    <div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" id="heat_on" onclick="heat_on()" class="btn btn-secondary">ON</button>
+  <button type="button" id="heat_off" onclick="heat_off()" class="btn btn-secondary">OFF</button>
+    
+</div></center></li>
+
+
+	<script type="text/javascript">
+          function openDoor() {
+            var requestURL = "https://api.particle.io/v1/devices/" +deviceID + "/open/";
+            $.post( requestURL, {
+              access_token: accessToken }
+                  );
+          }
+        </script>
+
+
+	<script type="text/javascript">
+          function closeDoor() {
+            var requestURL = "https://api.particle.io/v1/devices/" +deviceID + "/close/";
+            $.post( requestURL, {
+              access_token: accessToken }
+                  );
+          }
+        </script>
+
+
+
+	<script type="text/javascript">
+          function eDoor() {
+            var requestURL = "https://api.particle.io/v1/devices/" +deviceID + "/stop/";
+            $.post( requestURL, {
+              access_token: accessToken }
+                  );
+          }
+        </script>
+        
+	<script type="text/javascript">
+          function heat_on() {
+            var requestURL = "https://api.particle.io/v1/devices/" +deviceID + "/Heat_On/";
+            $.post( requestURL, {
+              access_token: accessToken }
+                  );
+          }
+        </script>
+        
+	<script type="text/javascript">
+          function heat_off() {
+            var requestURL = "https://api.particle.io/v1/devices/" +deviceID + "/Heat_Off/";
+            $.post( requestURL, {
+              access_token: accessToken }
+                  );
+          }
+        </script>
+        
+    <script type="text/javascript">
+          function Get_Sensor_Data() {
+            var requestURL = "https://api.particle.io/v1/devices/" +deviceID + "/Get_Sensor_Data/";
+            $.post( requestURL, {
+              access_token: accessToken }
+                  );
+          }
+        </script>
+        
+       
+<br/>
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+<center>
+   <li><button onclick="startSensor()" class="btn btn-secondary">Check Sensors</button></center></li>
+ 
+<script type="text/javascript">
+    function startSensor() {
+
+        document.getElementById("Temp_Fahrenheit").innerHTML = "Waiting for data...";
+        var eventSource = new EventSource("https://api.particle.io/v1/devices/" + deviceID + "/events/?access_token=" + accessToken);
+
+        eventSource.addEventListener('open', function(e) {
+            console.log("Opened!"); },false);
+         
+        eventSource.addEventListener('error', function(e) {
+            console.log("Errored!"); },false);
+        
+
+        
+        eventSource.addEventListener('Temp_Fahrenheit', function(e) {
+            var parsedData = JSON.parse(e.data);
+            var tempSpan = document.getElementById("Temp_Fahrenheit");
+            tempSpan.innerHTML = "Temp: " + parsedData.data;
+            tempSpan.style.fontSize = "28px";
+            tsSpan.innerHTML = "At timestamp " + parsedData.published_at;
+            tsSpan.style.fontSize = "9px";
+        }, false);
+        
+        eventSource.addEventListener('Humidity', function(e) {
+            var parsedData = JSON.parse(e.data);
+            var tempSpan = document.getElementById("Humidity");
+            tempSpan.innerHTML = "Humidity: " + parsedData.data;
+            tempSpan.style.fontSize = "28px";
+            tsSpan.innerHTML = "At timestamp " + parsedData.published_at;
+            tsSpan.style.fontSize = "9px";
+        }, false);
+        
+        eventSource.addEventListener('Photosensor', function(e) {
+            var parsedData = JSON.parse(e.data);
+            var tempSpan = document.getElementById("Photosensor");
+            tempSpan.innerHTML = "Photosensor: " + parsedData.data;
+            tempSpan.style.fontSize = "28px";
+            tsSpan.innerHTML = "At timestamp " + parsedData.published_at;
+            tsSpan.style.fontSize = "9px";
+        }, false);
+    
+        Get_Sensor_Data("Get_Sensor_Data");
+    }
+ 
+    
+    </script>
+    <br/><li><output id="Temp_Fahrenheit" for="Temp_Fahrenheit"></output><br>
+    <output id="Humidity" for="Humidity"></output><br>
+    <output id="Photosensor" for="Photosensor"></output></li>
+    <hr>
+<p>This is Chicken Shit v4 of the MOBILE web app interface to operate chicken operations on a RecklessR Chicken Automation device.</p>
+</br>
+<footer>
+<p>&copy; 2020 - RecklessR</p>
+</footer>
+</body>
+</html>
